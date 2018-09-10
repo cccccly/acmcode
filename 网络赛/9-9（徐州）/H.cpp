@@ -1,52 +1,47 @@
 #include <bits/stdc++.h>
-
 using namespace std;
-#define ll long long
-const int N = 1e5+5;
-int a[N];
-ll sum[N],sum1[N];
-int n,q;
-void update(int b,int c){
-	int temp = a[b];
-	a[b] = c;
-	for(int i = b;i <= n;i++){
-		sum[i] =  sum[i] - temp + c;
-		sum1[i] = sum1[i] - (ll)(i-b+1)*(temp - c);
-	}
+using ll = long long;
+const int N = 100005;
+ll bit1[N], bit2[N];
+ll a[N];
+int n;
+void add(ll* bit, int i, ll x) {
+    while(i <= n) {
+        bit[i] += x;
+        i += (-i) & i;
+    }
 }
 
+ll sum(ll* bit, int i) {
+    ll ret = 0;
+    while(i) {
+        ret += bit[i];
+        i -= (-i) & i;
+    }
+    return ret;
+}
 
-int main(){
-//	freopen("Hin.txt","r",stdin); 
-//	freopen("Hout.txt","w",stdout); 
-	while(~scanf("%d%d",&n,&q)){
-		sum[0]=0;
-		sum1[0]=0;
-		for(int i = 1;i <= n;i++){
-			scanf("%d",&a[i]);
+int main() {
+    int q;
+    while(~scanf("%d %d", &n, &q)){
+    	for(int i = 1;i <= n;i++){
+    		scanf("%lld",&a[i]);
+    		add(bit1,i,a[i]);
+    		add(bit2,i,(ll)(n-i+1)*a[i]);
 		}
-		sum[1] = a[1];
-		for(int i = 2;i <= n;i++){
-			sum[i] = sum[i-1] + a[i];
-		}
-		ll temp = 0;
-		for(int i = n;i >= 1;i--){
-			temp += sum[i];
-		}
-		sum1[n] = temp;
-		for(int i = n-1;i >= 1;i--){
-			sum1[i] = sum1[i+1]-sum[i+1];
-		}
+		int op,l,r;
 		for(int i = 1;i <= q;i++){
-			int op,L,b,c;
-			scanf("%d%d%d",&op,&b,&c);
+			scanf("%d %d %d",&op,&l,&r);
 			if(op == 1){
-				printf("%lld\n",(ll)(sum1[c]-sum1[b-1]-(c-b+1)*sum[b-1]));
+				printf("%lld\n",sum(bit2,r)-sum(bit2,l-1)-(n-r)*(sum(bit1,r)-sum(bit1,l-1)));
 			}
-			else{
-				update(b,c);
+			else {
+				add(bit1,l,r-a[l]);
+				add(bit2,l,(ll)(n-l+1)*(r-a[l]));
+				a[l] = r;
 			}
-		}
+		} 
 	}
-	return 0;
+    
+    return 0;
 }
