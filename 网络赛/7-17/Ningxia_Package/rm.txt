@@ -1,0 +1,20 @@
+Very Easy:
+    B, C, D
+Easy:
+    A, E, F
+Medium:
+    G, H, I, J
+Medium Plus:
+    K, L
+Hard:
+    M
+
+./data
+...../{*}[A,B,C,D,E,F,G,H,I,J,K,L,M]
+........./tests
+............./01   - the sample input
+............./01.a - the sample output
+............./02   - the input
+............./02.a - the output
+........./solutions
+............./std.cpp - the standard code
