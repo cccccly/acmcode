@@ -3,15 +3,15 @@
 //https://blog.csdn.net/zearot/article/details/52280189
 using namespace std;
 using ll = long long;
-#define maxn 100007  //ÔªËØ×Ü¸öÊı
+#define maxn 200002  //ÔªËØ×Ü¸öÊı
 #define ls l,m,rt<<1
 #define rs m+1,r,rt<<1|1
 int Sum[maxn<<2],Add[maxn<<2];//SumÇóºÍ£¬AddÎªÀÁ¶è±ê¼Ç 
 int A[maxn];//´æÔ­Êı×éÊı¾İÏÂ±ê[1,n]
 
-//PushUpº¯Êı¸üĞÂ½ÚµãĞÅÏ¢ £¬ÕâÀïÊÇÇóºÍ
+//PushUpº¯Êı¸üĞÂ½ÚµãĞÅÏ¢ £¬×óÓÒ×ÓÊ÷×î´óÖµ 
 void PushUp(int rt){
-	Sum[rt]=Sum[rt<<1]+Sum[rt<<1|1];
+	Sum[rt]=max(Sum[rt<<1],Sum[rt<<1|1]);
 }
 //Buildº¯Êı½¨Ê÷ 
 void Build(int l,int r,int rt){ //l,r±íÊ¾µ±Ç°½ÚµãÇø¼ä£¬rt±íÊ¾µ±Ç°½Úµã±àºÅ
@@ -38,20 +38,6 @@ void Update(int L,int C,int l,int r,int rt){//l,r±íÊ¾µ±Ç°½ÚµãÇø¼ä£¬rt±íÊ¾µ±Ç°½Úµ
 	else       Update(L,C,m+1,r,rt<<1|1);
 	PushUp(rt);//×Ó½Úµã¸üĞÂÁË£¬ËùÒÔ±¾½ÚµãÒ²ĞèÒª¸üĞÂĞÅÏ¢ 
 }
-//Çø¼äĞŞ¸Ä
-//void Update(int L,int R,int C,int l,int r,int rt){//L,R±íÊ¾²Ù×÷Çø¼ä£¬l,r±íÊ¾µ±Ç°½ÚµãÇø¼ä£¬rt±íÊ¾µ±Ç°½Úµã±àºÅ 
-//	if(L <= l && r <= R){//Èç¹û±¾Çø¼äÍêÈ«ÔÚ²Ù×÷Çø¼ä[L,R]ÒÔÄÚ 
-//		Sum[rt]+=C*(r-l+1);//¸üĞÂÊı×ÖºÍ£¬ÏòÉÏ±£³ÖÕıÈ·
-//		Add[rt]+=C;//Ôö¼ÓAdd±ê¼Ç£¬±íÊ¾±¾Çø¼äµÄSumÕıÈ·£¬×ÓÇø¼äµÄSumÈÔĞèÒª¸ù¾İAddµÄÖµÀ´µ÷Õû
-//		return ; 
-//	}
-//	int m=(l+r)>>1;
-//	PushDown(rt,m-l+1,r-m);//ÏÂÍÆ±ê¼Ç
-//	//ÕâÀïÅĞ¶Ï×óÓÒ×ÓÊ÷¸ú[L,R]ÓĞÎŞ½»¼¯£¬ÓĞ½»¼¯²Åµİ¹é 
-//	if(L <= m) Update(L,R,C,l,m,rt<<1);
-//	if(R >  m) Update(L,R,C,m+1,r,rt<<1|1); 
-//	PushUp(rt);//¸üĞÂ±¾½ÚµãĞÅÏ¢ 
-//}  
 
 void PushDown(int rt,int ln,int rn){
 	//ln,rnÎª×ó×ÓÊ÷£¬ÓÒ×ÓÊ÷µÄÊı×ÖÊıÁ¿¡£ 
@@ -78,36 +64,27 @@ int Query(int L,int R,int l,int r,int rt){//L,R±íÊ¾²Ù×÷Çø¼ä£¬l,r±íÊ¾µ±Ç°½ÚµãÇø¼ä
 	
 	//ÀÛ¼Æ´ğ°¸
 	int ANS=0;
-	if(L <= m) ANS+=Query(L,R,l,m,rt<<1);
-	if(R >  m) ANS+=Query(L,R,m+1,r,rt<<1|1);
+	if(L <= m) ANS = max(ANS,Query(L,R,l,m,rt<<1));
+	if(R >  m) ANS = max(ANS,Query(L,R,m+1,r,rt<<1|1));
 	return ANS;
 }
 
 int main(){
-	int T,n;
-	scanf("%d",&T);
-	for(int t = 1;t <= T;t++){
-		scanf("%d",&n);
+	int n,m;
+	while(~scanf("%d%d",&n,&m)){
 		for(int i = 1;i <= n;i++){
 			scanf("%d",&A[i]);
 		}
-		Build(1,n,1);
-		string op;
+		char c;
 		int l,r;
-		printf("Case %d:\n",t);
-		while(cin>>op){
-			if(op == "End")
-				break;
-			scanf("%d %d",&l,&r);
-			if(op == "Query"){
+		for(int i = 1;i <= m;i++){
+			scanf("%c%d%d",&c,&l,&r);
+			if(c == 'Q'){
 				printf("%d\n",Query(l,r,1,n,1));
 			}
-			else if(op == "Add"){
-				Update(l,r,1,n,1);
-
-			}
-			else {
-				Update(l,-r,1,n,1);
+			else{
+				Update(l,r-A[l],1,n,1);
+				A[l] = r;
 			}
 		}
 	}

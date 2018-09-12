@@ -7,7 +7,7 @@ using ll = long long;
 #define ls l,m,rt<<1
 #define rs m+1,r,rt<<1|1
 int Sum[maxn<<2],Add[maxn<<2];//Sum求和，Add为懒惰标记 
-int A[maxn],n;//存原数组数据下标[1,n]
+int A[maxn];//存原数组数据下标[1,n]
 
 //PushUp函数更新节点信息 ，这里是求和
 void PushUp(int rt){Sum[rt]=Sum[rt<<1]+Sum[rt<<1|1];}
@@ -73,9 +73,9 @@ int main(){
 	for(int t = 1;t <= T;t++){
 		scanf("%d",&n);
 		for(int i = 1;i <= n;i++){
-			scanf("%lld",&a[i]);
+			scanf("%d",&A[i]);
 		}
-		build(1,1,n);
+		Build(1,n,1);
 		string op;
 		int l,r;
 		printf("Case %d:\n",t);
@@ -84,15 +84,14 @@ int main(){
 				break;
 			scanf("%d %d",&l,&r);
 			if(op == "Query"){
-				printf("%lld\n",query(1,1,n,l,r));
+				printf("%d\n",Query(l,r,1,n,1));
 			}
 			else if(op == "Add"){
-				update(1,1,n,l,a[l]+r);
-				a[l] += r;
+				Update(l,r,1,n,1);
+
 			}
 			else {
-				update(1,1,n,l,a[l]-r);
-				a[l] -= r;
+				Update(l,-r,1,n,1);
 			}
 		}
 	}
