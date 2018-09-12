@@ -1,8 +1,7 @@
-#include <bits/stdc++.h>
-//https://blog.csdn.net/zearot/article/details/48299459
-//https://blog.csdn.net/zearot/article/details/52280189
+#include <iostream>
+#include <cstdio>
 using namespace std;
-using ll = long long;
+#define ll long long
 #define maxn 100007  //元素总个数
 #define ls l,m,rt<<1
 #define rs m+1,r,rt<<1|1
@@ -25,18 +24,6 @@ void Build(ll l,ll r,ll rt){ //l,r表示当前节点区间，rt表示当前节点编号
 	PushUp(rt);
 }
 
-void Update(ll L,ll C,ll l,ll r,ll rt){//l,r表示当前节点区间，rt表示当前节点编号
-	if(l==r){//到叶节点，修改 
-		Sum[rt]+=C;
-		return;
-	}
-	ll m=(l+r)>>1;
-	//根据条件判断往左子树调用还是往右 
-	if(L <= m) Update(L,C,l,m,rt<<1);
-	else       Update(L,C,m+1,r,rt<<1|1);
-	PushUp(rt);//子节点更新了，所以本节点也需要更新信息 
-}
-
 void PushDown(ll rt,ll ln,ll rn){
 	//ln,rn为左子树，右子树的数字数量。 
 	if(Add[rt]){
@@ -50,6 +37,22 @@ void PushDown(ll rt,ll ln,ll rn){
 		Add[rt]=0;
 	}
 }
+
+void Update(ll L,ll R,ll C,ll l,ll r,ll rt){//L,R表示操作区间，l,r表示当前节点区间，rt表示当前节点编号 
+	if(L <= l && r <= R){//如果本区间完全在操作区间[L,R]以内 
+		Sum[rt]+=C*(r-l+1);//更新数字和，向上保持正确
+		Add[rt]+=C;//增加Add标记，表示本区间的Sum正确，子区间的Sum仍需要根据Add的值来调整
+		return ; 
+	}
+	ll m=(l+r)>>1;
+	PushDown(rt,m-l+1,r-m);//下推标记
+	//这里判断左右子树跟[L,R]有无交集，有交集才递归 
+	if(L <= m) Update(L,R,C,l,m,rt<<1);
+	if(R >  m) Update(L,R,C,m+1,r,rt<<1|1); 
+	PushUp(rt);//更新本节点信息 
+}
+
+
 
 ll Query(ll L,ll R,ll l,ll r,ll rt){//L,R表示操作区间，l,r表示当前节点区间，rt表示当前节点编号
 	if(L <= l && r <= R){
@@ -68,33 +71,26 @@ ll Query(ll L,ll R,ll l,ll r,ll rt){//L,R表示操作区间，l,r表示当前节点区间，rt表
 }
 
 int main(){
-	int T;
-	ll n;
-	scanf("%d",&T);
-	for(int t = 1;t <= T;t++){
-		scanf("%lld",&n);
-		for(int i = 1;i <= n;i++){
-			scanf("%lld",&A[i]);
-		}
-		Build(1,n,1);
-		string op;
-		ll l,r;
-		printf("Case %d:\n",t);
-		while(cin>>op){
-			if(op == "End")
-				break;
-			scanf("%lld %lld",&l,&r);
-			if(op == "Query"){
-				printf("%lld\n",Query(l,r,1,n,1));
-			}
-			else if(op == "Add"){
-				Update(l,r,1,n,1);
-
-			}
-			else {
-				Update(l,-r,1,n,1);
-			}
-		}
+	ll n,q;
+	scanf("%lld %lld",&n,&q);
+	for(int i = 1;i <= n;i++){
+		scanf("%lld",&A[i]);
 	}
+	Build(1,n,1);
+	string op;
+	ll l,r,c;
+	for(int i = 1;i <= q;i++){
+		cin>>op;
+		if(op == "Q"){
+			scanf("%lld %lld",&l,&r);
+			printf("%lld\n",Query(l,r,1,n,1));
+		}
+		else{
+			scanf("%lld %lld %lld",&l,&r,&c);
+			Update(l,r,c,1,n,1);
+		}
+
+	}
+	
 	return 0;
 }

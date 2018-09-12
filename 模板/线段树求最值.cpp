@@ -1,6 +1,5 @@
+//HDU 1754 线段树求最大值+单点更新 
 #include <bits/stdc++.h>
-//https://blog.csdn.net/zearot/article/details/48299459
-//https://blog.csdn.net/zearot/article/details/52280189
 using namespace std;
 using ll = long long;
 #define maxn 200002  //元素总个数
