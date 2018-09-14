@@ -28,19 +28,16 @@ void Build(ll l,ll r,ll rt){ //l,r表示当前节点区间，rt表示当前节点编号
 	PushUp(rt);
 }
 
-void PushDown(ll rt,ll ln,ll rn){
-	//ln,rn为左子树，右子树的数字数量。 
-	if(Add[rt]){
-		//下推标记 
-		Add[rt<<1]+=Add[rt];
-		Add[rt<<1|1]+=Add[rt];
-		//修改子节点的Sum使之与对应的Add相对应 
-		Sum[rt<<1]+=Add[rt]*ln;
-		Sum[rt<<1|1]+=Add[rt]*rn;
-		//清除本节点标记 
-		Add[rt]=0;
-	}
+void PushDown(ll rt,ll ln,ll rn){ //下推标记  ln,rn为左子树，右子树的数字数量。
+	Add[rt<<1] = Add[rt];
+	Add[rt<<1|1] = Add[rt];
+	//修改子节点的Sum使之与对应的Add相对应 
+	Sum[rt<<1] =Add[rt]*ln;
+	Sum[rt<<1|1] =Add[rt]*rn;
+	//清除本节点标记 
+	Add[rt]=0;
 }
+
 
 //单点修改 
 void Update(ll L,ll C,ll l,ll r,ll rt){//l,r表示当前节点区间，rt表示当前节点编号
@@ -62,7 +59,7 @@ void Update(ll L,ll C,ll l,ll r,ll rt){//l,r表示当前节点区间，rt表示当前节点编号
 //		return ; 
 //	}
 //	ll m=(l+r)>>1;
-//	PushDown(rt,m-l+1,r-m);//下推标记
+//	if(Add[rt]) PushDown(rt,m-l+1,r-m);//下推标记
 //	//这里判断左右子树跟[L,R]有无交集，有交集才递归 
 //	if(L <= m) Update(L,R,C,l,m,rt<<1);
 //	if(R >  m) Update(L,R,C,m+1,r,rt<<1|1); 
