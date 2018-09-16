@@ -7,7 +7,7 @@ const int maxn = 12; //矩阵大小
 const int mod = 9973;
 //矩阵结构体定义 
 struct Matrix {   
-    int s[maxn][maxn];  
+    ll s[maxn][maxn];  
     Matrix(){ memset(s,0,sizeof(s));  };  
     Matrix operator * (const Matrix& c) {  
 	    Matrix ans;  
@@ -47,15 +47,15 @@ int main()
 		scanf("%d%d",&n,&k);
 		for(int i = 0;i < n;i++){
 			for(int j = 0;j < n;j++)
-				scanf("%d",&A.s[i][j]);
+				scanf("%lld",&A.s[i][j]);
 		}
 		A = pow_mod(A,k);
-		int ans = 0;
+		ll ans = 0;
 		for(int i = 0;i < n;i++){
 			ans += A.s[i][i];
 			ans %= mod;
 		}
-		printf("%d\n",ans); 
+		printf("%lld\n",ans); 
 	}
 	return 0;
 }
