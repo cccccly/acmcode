@@ -75,7 +75,7 @@ ll Query(ll L,ll R,ll l,ll r,ll rt){//L,R表示操作区间，l,r表示当前节点区间，rt表
 	}
 	ll m=(l+r)>>1;
 	//下推标记，否则Sum可能不正确
-	PushDown(rt,m-l+1,r-m); 
+	if(Add[rt]) PushDown(rt,m-l+1,r-m); 
 	
 	//累计答案
 	ll ANS=0;
