@@ -6,7 +6,7 @@ using namespace std;
 #define maxn 50005  //元素总个数
 #define ls l,m,rt<<1
 #define rs m+1,r,rt<<1|1
-
+#define Inf 1000005
 int Mx[maxn<<2],Mn[maxn<<2];//保存最大值和最小值 
 int A[maxn];//存原数组数据下标[1,n]
 
@@ -51,7 +51,7 @@ int QueryMn(int L,int R,int l,int r,int rt){//L,R表示操作区间，l,r表示当前节点区
 	int m=(l+r)>>1;
 
 	//累计答案
-	int ANS=0;
+	int ANS = Inf;
 	if(L <= m) ANS = min(ANS,QueryMn(L,R,l,m,rt<<1));
 	if(R >  m) ANS = min(ANS,QueryMn(L,R,m+1,r,rt<<1|1));
 	return ANS;
@@ -59,7 +59,7 @@ int QueryMn(int L,int R,int l,int r,int rt){//L,R表示操作区间，l,r表示当前节点区
 
 int main(){
 	int n,m;
-	freopen("in.txt","r",stdin);
+//	freopen("in.txt","r",stdin);
 	scanf("%d%d",&n,&m);
 		for(int i = 1;i <= n;i++){
 			scanf("%d",&A[i]);
