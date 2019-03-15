@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-#include <bits/stdc++.h>
-
-=======
-<<<<<<< HEAD
 #include <iostream>
 #include <cstdio>
 
@@ -11,7 +6,7 @@ using namespace std;
 #define maxn 50005  //元素总个数
 #define ls l,m,rt<<1
 #define rs m+1,r,rt<<1|1
-
+#define Inf 1000005
 int Mx[maxn<<2],Mn[maxn<<2];//保存最大值和最小值 
 int A[maxn];//存原数组数据下标[1,n]
 
@@ -56,7 +51,7 @@ int QueryMn(int L,int R,int l,int r,int rt){//L,R表示操作区间，l,r表示当前节点区
 	int m=(l+r)>>1;
 
 	//累计答案
-	int ANS=0;
+	int ANS = Inf;
 	if(L <= m) ANS = min(ANS,QueryMn(L,R,l,m,rt<<1));
 	if(R >  m) ANS = min(ANS,QueryMn(L,R,m+1,r,rt<<1|1));
 	return ANS;
@@ -64,7 +59,7 @@ int QueryMn(int L,int R,int l,int r,int rt){//L,R表示操作区间，l,r表示当前节点区
 
 int main(){
 	int n,m;
-	freopen("in.txt","r",stdin);
+//	freopen("in.txt","r",stdin);
 	scanf("%d%d",&n,&m);
 		for(int i = 1;i <= n;i++){
 			scanf("%d",&A[i]);
@@ -75,44 +70,5 @@ int main(){
 			scanf("%d %d",&l,&r);
 			printf("%d\n",QueryMx(l,r,1,n,1)-QueryMn(l,r,1,n,1));
 		}
-=======
-#include <stdio.h>
-#include <string.h>
->>>>>>> 46b1f38e3986b767299d3a6ed2d368c338c6d807
-using namespace std;
-
-int ans[1001];
-int main(){
-	string ss;
-	int cnt = 0,temp = 0,flag = 0;
-	while(1){
-		getline(cin,ss);
-		cnt = 0,flag = 0;
-		for(int i = 0;i < ss.size();i++){
-			if(ss[i] <= '9' && ss[i] >= '0'){
-				if(flag == 0){
-					flag = 1;
-					temp = ss[i] - 48;
-				}
-				else{
-					temp *= 10;
-					temp += ss[i] - 48;
-				}
-			}
-			else{
-				if(flag == 1){
-					ans[cnt++] = temp;
-					flag = 0;
-				}	
-			}
-		}
-		if(flag == 1){
-			ans[cnt++] = temp;
-		}
-		for(int i = 0;i < cnt;i++)
-			printf("%d ",ans[i]);
-		puts("");
-	}
->>>>>>> db3cffa43ab3ece96e6240679f71330381f30d94
 	return 0;
-} 
+}
