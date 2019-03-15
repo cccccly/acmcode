@@ -28,7 +28,7 @@ int main(){
 		for(int i = 1;i <= L;i++){
 			for(int j = 1;j <= R;j++){
 				for(int k = 1;k <= C;k++){
-					printf("%c",&maze[j][k][i]);
+					scanf("%c",&maze[j][k][i]);
 				}
 				puts("");
 			} 
