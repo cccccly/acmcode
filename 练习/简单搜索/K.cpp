@@ -58,7 +58,6 @@ int main(){
 		}
 	}
 	bfs();
-	
 	dfs(4,4);
 	printf("(4, 4)");
 	return 0;

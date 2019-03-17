@@ -22,5 +22,6 @@ void pht_prime_table(int N){
 			else{
 				phi[i * prime[j]] = phi[i]*(prime[j] - 1);
 			} 
+		}
 	}
 } 
