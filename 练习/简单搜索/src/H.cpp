@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include <queue>
 using namespace std;
-
+struct node{
+	int x,y,dir,step;
+};
 
 int a,b,c;
 int vis[110][110] = {0};
 node road[110][110];  //0-fill(1) 5-pour(2,1)
-struct node{
-	int x,y,dir,step;
-};
+
+
 queue <node> q;
 node bfs(){
 	node cur,next;
@@ -62,6 +63,8 @@ node bfs(){
 			vis[next.x][next.y] = 1;
 			next.step = cur.step+1;
 			next.dir = i;
+			road[next.x][next.y].x = cur.x;
+			road[next.x][next.y].y = cur.y;
 			road[next.x][next.y].dir = i;
 			if(next.x == c || next.y == c){
 				return next;
@@ -69,49 +72,33 @@ node bfs(){
 			q.push(next);
 		}
 	}
-	return node(-1,-1,-1,-1);
+	return node{-1,-1,-1,-1};
 }
 
 void dfs(node cur){
 	if(cur.x == 0 && cur.y == 0)
 		return;
-	int i = cur.dir;
 	node next;
+	next = road[cur.x][cur.y];
+	dfs(next);
+	int i = next.dir;
 	if(i == 0){
-		next.x = a;
-		next.y = cur.y;
+		puts("FILL(1)");
 	}
 	else if(i == 1){
-		next.x = cur.x;
-		next.y = b;
+		puts("FILL(2)");
 	}
 	else if(i == 2){
-		next.x = 0;
-		next.y = cur.y;
+		puts("DROP(1)");
 	}
 	else if(i == 3){
-		next.x = cur.x;
-		next.y = 0;
+		puts("DROP(2)");
 	}
 	else if(i == 4){
-		if(cur.x <= b-cur.y){
-			next.x = 0;
-			next.y = cur.x+cur.y;
-		}
-		else{
-			next.x = cur.x-b+cur.y;
-			next.y = b;
-		}
+		puts("POUR(1,2)");
 	}
 	else if(i == 5){
-		if(cur.y <= a-cur.x){
-			next.x = cur.x+cur.y;
-			next.y = 0;
-		}
-		else{
-			next.x = a;
-			next.y = cur.x+cur.y-a;
-		}
+		puts("POUR(2,1)");
 	}
 }
 
