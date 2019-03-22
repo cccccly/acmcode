@@ -4,36 +4,25 @@
 #include<ctime>
 using namespace std;
 int main() {
-	freopen("DATA\\G.in","w",stdout);
+	freopen("data\\a.in","w",stdout);
 	srand((unsigned)time(NULL));  //首先必须调用这个函数，否则每一次运行时生成的随机数都是相同的。
-	int N,C;
-	N = rand()%(1000)+1;
-
-	printf("%d\n",N);
-	for(int j = 0;j < N;j++){
-		C = rand()%(5) +1;
-		printf("%d\n",C);
-		for(int i = 0;i < C;i++){
-			int temp = rand()%2;
-			if(temp == 0)
-				printf("C");
-			else printf("D");
+	int T,m,n,s;
+	T = rand()%(100)+1;
+	
+	printf("%d\n",T);
+	for(int t = 0;t < T;t++){
+		m = rand()%10 + 1;
+		n = rand()%10 + 1;
+		printf("%d %d\n",n,m);
+		for(int i = 0;i < n;i++){
+			for(int j = 0;j < m;j++){
+				s = rand()%2;
+				if(s == 0)
+					putchar('.');
+				else putchar('#');
+			}
+			puts("");
 		}
-		puts("");
-		for(int i = 0;i < C;i++){
-			int temp = rand()%2;
-			if(temp == 0)
-				printf("C");
-			else printf("D");
-		}
-		puts("");
-		for(int i = 0;i < 2*C;i++){
-			int temp = rand()%2;
-			if(temp == 0)
-				printf("C");
-			else printf("D");
-		}
-		puts("");
 	}
 	return 0;
 }

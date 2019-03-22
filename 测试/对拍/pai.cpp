@@ -7,11 +7,11 @@ int main() {
 	
 	while(1){
 		system("rand.exe");
-		system("G.exe");
+		system("a1.exe");
 		double t1=clock();
-		system("G2.exe");
+		system("a2.exe");
 		double t2=clock();
-		if(system("fc DATA\\G.out DATA\\G2.out")) {
+		if(system("fc data\\a1.out data\\a2.out")) {
 			printf("WA time used:%lfms\n",t2-t1);
 			return 0;
 		}
