@@ -6,7 +6,7 @@ using namespace std;
 int main() {
 	freopen("data\\a.in","w",stdout);
 	srand((unsigned)time(NULL));  //首先必须调用这个函数，否则每一次运行时生成的随机数都是相同的。
-	int T,m,n,s;
+	int T,R,C,x1,y1,x2,y2;
 	T = rand()%(100)+1;
 	
 	printf("%d\n",T);

@@ -6,9 +6,9 @@ using namespace std;
 
 struct Node{
 	int x,y,step;
-	bool operator <(const Node b)const{
-		return step < b.step;
-	}
+//	bool operator <(const Node b)const{
+//		return step < b.step;
+//	}
 };
 
 char maze[maxn][maxn];
@@ -33,6 +33,7 @@ void printAll(){
 		}
 		puts("");
 	}
+	puts("");
 }
 
 void init(){
@@ -46,16 +47,18 @@ void init(){
 	}
 	for(int i = 0;i < R;i++)
 		for(int j = 0;j < C;j++){
-			if(maze[i][j] == 'J')
+			if(maze[i][j] == 'J'){
 				J.x = i,J.y = j,J.step = 1;
+				vis[i][j] = 1;
+			}
+				
 			else if(maze[i][j] == 'F'){
 				F.x = i,F.y = j,F.step = 1;
 				vis1[i][j] = 1;
-			}
-				
+				q1.push(F);
+			}	
 		}
-	//printN(F);
-	q1.push(F);
+	//printN(F)
 }
 
 bool judge(Node tmp){
@@ -74,6 +77,8 @@ bool judgeOut(Node tmp){
 
 void burn(){
 	Node cur,next;
+	if(q1.empty())
+		return ;
 	cur = q1.front();
 	int tmp = cur.step;
 	//printN(cur);
@@ -96,13 +101,17 @@ void burn(){
 Node bfs(){
 	Node cur,next;
 	Node tmp = {-1,-1,-1};
+	int tmp1 = q.front().step;
 	q.push(J);
 	while(!q.empty()){
 		cur = q.front();
 		q.pop();
-		burn();    //burn first
-		// printAll();
-		// puts("");
+		if(tmp1 != cur.step){
+			burn();    //burn first
+			tmp1 = cur.step;
+		}	
+		if(judgeOut(cur))
+			return cur;
 		for(int i = 0;i < 4;i++){
 			next.x = cur.x + dx[i];
 			next.y = cur.y + dy[i];
@@ -121,7 +130,7 @@ Node bfs(){
 	return tmp;
 }
 int main(){
-	//freopen("..//data//j.in","r",stdin);
+	//freopen("data//a.in","r",stdin);
 	scanf("%d",&N);
 	while(N--){
 		scanf("%d %d",&R,&C);

@@ -1,132 +1,148 @@
 #include <stdio.h>
 #include <queue>
 #include <string.h>
-
-#define maxn 0x7ffffff
-#define local
 using namespace std;
-struct node{
+#define maxn 1010
+
+struct Node{
 	int x,y,step;
-	bool operator <(const node &b) const{
-		return step>b.step;
-	}
+//	bool operator <(const Node b)const{
+//		return step < b.step;
+//	}
 };
 
-char maze[15][15];
-bool vis[15][15];
-int n,m,res,temp,cnt,flag;
-int dx[4] = {1,-1,0,0};
-int dy[4] = {0,0,1,-1};  //xia shang you zuo
+char maze[maxn][maxn];
+bool vis[maxn][maxn];
+bool vis1[maxn][maxn];
+queue<Node> q;
+queue<Node> q1;
+//priority_queue<Node> q1;
+int dx[4] = {0,0,1,-1};
+int dy[4] = {1,-1,0,0};
+int N,R,C;
+Node J,F;
 
-priority_queue<node> pq;
-//queue<node> pq;
-void init(){
-	cnt = 0,res = maxn;
-	for(int i = 0;i < n;i++){
-		for(int j = 0;j < m;j++){
-			vis[i][j] = 0;
-			if(maze[i][j] == '#')
-				cnt++;
-		}	
-	}
+void printN(Node tmp){
+	printf("%d %d %d\n",tmp.x,tmp.y,tmp.step);
 }
 
-bool judge(int x,int y){
-	if(x < 0 || x >= n || y<0 || y>=m||maze[x][y] == '.'||vis[x][y] == 1)
-		return 0;
-	else return 1;
-}
-
-void print(){
-	for(int i = 0;i < n;i++){
-		for(int j = 0;j < n;j++)
+void printAll(){
+	for(int i = 0;i < R;i++){
+		for(int j = 0;j < C;j++){
 			printf("%c",maze[i][j]);
+		}
 		puts("");
 	}
+	puts("");
 }
 
-void pNode(node nd){
-	printf("(%d,%d):%d\n",nd.x,nd.y,nd.step);
+void init(){
+	memset(vis,0,sizeof(vis));
+    memset(vis1,0,sizeof(vis1));
+	while(!q.empty()){
+		q.pop();
+	}
+	while(!q1.empty()){
+		q1.pop();
+	}
+	for(int i = 0;i < R;i++)
+		for(int j = 0;j < C;j++){
+			if(maze[i][j] == 'J'){
+				J.x = i,J.y = j,J.step = 1;
+				vis[i][j] = 1;
+			}
+				
+			else if(maze[i][j] == 'F'){
+				F.x = i,F.y = j,F.step = 1;
+				vis1[i][j] = 1;
+				q1.push(F);
+			}	
+		}
+	//printN(F)
 }
 
+bool judge(Node tmp){
+	int x = tmp.x,y = tmp.y;
+	if(x>=0 && x<R && y>=0 && y<C && vis[x][y]==0 && maze[x][y]=='.')
+		return 1;
+	else return 0;
+}
 
+bool judgeOut(Node tmp){
+	int x = tmp.x,y = tmp.y;
+	if(x == 0||x == R-1||y == 0||y == C-1)
+		return 1;
+	else return 0;
+}
 
-int bfs(node n1,node n2){
-	if(flag == cnt)
-		return 0;
-	vis[n1.x][n1.y] = vis[n2.x][n2.y] = 1;
-	pq.push(n1);
-	pq.push(n2);
-	node cur,next;
-	while(!pq.empty()){
-		cur = pq.top();
-		//pNode(cur);
-		pq.pop();
+void burn(){
+	Node cur,next;
+	if(q1.empty())
+		return ;
+	cur = q1.front();
+	int tmp = cur.step;
+	//printN(cur);
+	do{
+		q1.pop();
+		//printN(cur);
 		for(int i = 0;i < 4;i++){
 			next.x = cur.x + dx[i];
 			next.y = cur.y + dy[i];
-			if(!judge(next.x,next.y))
+			next.step = cur.step + 1;
+			if(next.x>=0 && next.x<R && next.y>=0 && next.y<C && (maze[next.x][next.y]=='.'||maze[next.x][next.y]=='J') && vis1[next.x][next.y]==0){
+				maze[next.x][next.y] = 'F';
+				q1.push(next);
+                vis1[next.x][next.y] = 1;
+			}
+		}
+		cur = q1.front();
+	}while(cur.step == tmp);
+}
+Node bfs(){
+	Node cur,next;
+	Node tmp = {-1,-1,-1};
+	int tmp1 = q.front().step;
+	q.push(J);
+	while(!q.empty()){
+		cur = q.front();
+		q.pop();
+		if(tmp1 != cur.step){
+			burn();    //burn first
+			tmp1 = cur.step;
+		}	
+		if(judgeOut(cur))
+			return cur;
+		for(int i = 0;i < 4;i++){
+			next.x = cur.x + dx[i];
+			next.y = cur.y + dy[i];
+			if(!judge(next))
 				continue;
 			next.step = cur.step+1;
-			flag++;
-			if(flag == cnt)
-				return next.step;
+			if(judgeOut(next))
+				return next;
+			q.push(next);
 			vis[next.x][next.y] = 1;
-			pq.push(next);
-		}
+//			puts("1");
+			//printAll();
+		}	
 	}
-	return -1;
-}
-
-int main(){
-	int T;
-	#ifdef local
-		freopen("data\\wa.in","r",stdin);
-		//freopen("data\\a1.out","w",stdout);
-	#endif
 	
-	scanf("%d",&T);
-	for(int i = 1;i <= T;i++){
-		scanf("%d %d",&n,&m);
-		
-		for(int j = 0;j < n;j++)
-			scanf("%s",maze[j]);
-		init();	
-		//print();
-		
-		for(int j = 0;j < n*m;j++){
-			node n1;
-			n1.x = j/n,n1.y = j%n;
-			for(int k = 0;k < n*m;k++){
-				node n2;
-				n2.x = k/n,n2.y = k%n;
-				memset(vis,0,sizeof(vis));
-				if(judge(n1.x,n1.y)==0 || judge(n2.x,n2.y)==0){
-					continue;
-				}
-				n1.step = 0,n2.step = 0;
-				pNode(n1);
-				pNode(n2);
-				puts("");
-				if(n1.x == n2.x && n1.y == n2.y)
-					flag = 1;
-				else flag = 2;
-				
-				while(!pq.empty()){
-					pq.pop();
-				}
-				temp = bfs(n1,n2);
-				
-				if(temp != -1 && res > temp)
-					res = temp;
-				puts("");
-			}
-			//printf("flag%d:%d\n",i,flag);
+	return tmp;
+}
+int main(){
+	//freopen("data//a.in","r",stdin);
+	scanf("%d",&N);
+	while(N--){
+		scanf("%d %d",&R,&C);
+		for(int i = 0;i < R;i++){
+			scanf("%s",maze[i]);
 		}
-		//printf("%d\n",res);
-		if(res == maxn)
-			res = -1; 
-		printf("Case %d: %d\n",i,res);
+		init();
+		//printAll();
+		Node tmp = bfs();
+		if(tmp.step == -1)
+			puts("IMPOSSIBLE");
+		else printf("%d\n",tmp.step);
 	}
 	return 0;
-}
+} 
