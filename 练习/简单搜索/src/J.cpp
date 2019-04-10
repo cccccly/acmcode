@@ -48,8 +48,11 @@ void init(){
 		for(int j = 0;j < C;j++){
 			if(maze[i][j] == 'J')
 				J.x = i,J.y = j,J.step = 1;
-			else if(maze[i][j] == 'F')
+			else if(maze[i][j] == 'F'){
 				F.x = i,F.y = j,F.step = 1;
+				vis1[i][j] = 1;
+			}
+				
 		}
 	//printN(F);
 	q1.push(F);
@@ -98,6 +101,8 @@ Node bfs(){
 		cur = q.front();
 		q.pop();
 		burn();    //burn first
+		// printAll();
+		// puts("");
 		for(int i = 0;i < 4;i++){
 			next.x = cur.x + dx[i];
 			next.y = cur.y + dy[i];
@@ -116,7 +121,7 @@ Node bfs(){
 	return tmp;
 }
 int main(){
-	freopen("..//data//j.in","r",stdin);
+	//freopen("..//data//j.in","r",stdin);
 	scanf("%d",&N);
 	while(N--){
 		scanf("%d %d",&R,&C);
