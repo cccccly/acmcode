@@ -1,132 +1,111 @@
-#include <iostream>
-#include <algorithm>
-#include <string>
-#include <cstring>
-#include <cmath>
-#include <cstdio>
-#include <queue>
-#include <vector>
+#include<bits/stdc++.h>
+ 
+typedef long long ll;
+ 
 using namespace std;
-#define inf 0x3f3f3f3f
+ 
+const int MAXN = 1010;
+ 
 int n,m;
-bool vis[15][15];
-char grid[15][15];
-int casee=0;
-int ans=inf;
-struct node
-{
-    int x,y,depth;
-};
-vector <node>grass;
-bool check (int x,int y)
-{
-    if (!vis[x][y]&&grid[x][y]=='#'&&x>=0&&x<n&&y>=0&&y<m)
-    return true;
-    else
-    return false;
+char G[MAXN][MAXN];
+int fire[MAXN][MAXN];  //火烧到（i，j）的最小时间 
+int Time[MAXN][MAXN];  //人到达（i，j）的最小时间 
+int dir[4][2] = {{0,1},{0,-1},{1,0},{-1,0}};
+ 
+void bfsFire(){   //求火烧到（i，j）的最小时间 
+	memset(fire,-1,sizeof(fire));
+	queue< pair<int,int> > q;
+	for(int i = 0 ; i<n ; i++){
+		for(int j = 0 ; j<m ; j++){
+			if(G[i][j] == 'F'){
+				fire[i][j] = 0;                //F为火的初始位置，时间为0 
+				q.push(make_pair(i,j));
+			}
+		}
+	} 
+	while(!q.empty()){
+		pair<int,int> temp = q.front();
+		q.pop();
+		int x = temp.first; int y = temp.second;
+		
+		for(int i = 0 ; i<4 ; i++){
+			int nxtx = x+dir[i][0];
+			int nxty = y+dir[i][1];
+			
+			if(nxtx<0 || nxtx>=n || nxty<0 || nxty>=m) //地图之外 
+				continue;
+			if(fire[nxtx][nxty]!=-1)                   //火之前已经烧到 
+				continue; 
+			if(G[nxtx][nxty] == '#')                   //是墙 
+				continue;
+			
+			fire[nxtx][nxty] = fire[x][y] + 1;
+			q.push(make_pair(nxtx,nxty));
+		}
+	}
+} 
+ 
+int bfs(){   //求人跑出迷宫的最小时间 
+	queue< pair<int,int> > q;
+	memset(Time,-1,sizeof(Time));
+	
+	for(int i = 0 ; i<n ; i++){
+		for(int j = 0 ; j<m ; j++){
+			if(G[i][j] == 'J'){
+				q.push(make_pair(i,j));
+				Time[i][j] = 0;              //J为JOE逃跑的起始位置，时间为0 
+			}
+		}
+	}
+	
+	while (!q.empty()){
+		pair<int,int> temp = q.front();
+		q.pop();
+		
+		int x = temp.first;
+		int y = temp.second;
+		
+		if(x==0 || y==0 || x==n-1 || y==m-1)   //能顺利到达边界即为逃出边界。逃出去的时间要+1，即从边界跑出去 
+			return Time[x][y]+1;
+			
+		for(int i = 0 ; i<4 ; i++){
+			int nxtx = x+dir[i][0];
+			int nxty = y+dir[i][1];
+			
+			if(Time[nxtx][nxty] != -1)      //之前已经搜索过 
+				continue;
+			if(nxtx<0 || nxtx>=n || nxty<0 || nxty>=m)   //下一步在规定范围之外 
+				continue;
+			if(G[nxtx][nxty] == '#')                //下一步是墙 
+				continue;
+			if(fire[nxtx][nxty]!=-1 && Time[x][y]+1>=fire[nxtx][nxty])  //人最小到达的时间比火烧到的时间大 
+				continue;
+			
+			Time[nxtx][nxty] = Time[x][y] + 1;
+			q.push(make_pair(nxtx,nxty));
+		} 
+	} 
+	return -1;
 }
-bool judge ()
-{
-    for (int i=0;i<n;++i){
-        for (int j=0;j<m;++j){
-            if (grid[i][j]=='#'&&!vis[i][j])
-            return false;
-        }
-    }
-    return true;
-}
-void init()
-{
-    grass.clear();
-    memset(vis,false,sizeof vis);
-}
-int bfs (node n1,node n2)
-{
-    queue <node> q;
-    memset(vis,false,sizeof vis);
-    while (!q.empty()) q.pop();
-    q.push(n1);
-    q.push(n2);
-    int depthest=0;
-    while (!q.empty())
-    {
-        node now=q.front();
-        q.pop();
-        if (vis[now.x][now.y])
-        continue;
-        vis[now.x][now.y]=true;
-        depthest=now.depth;
-        if (check(now.x-1,now.y))
-        {
-            node nxt=now;
-            nxt.x--;
-            nxt.depth++;
-            q.push(nxt);
-        }
-        if (check(now.x+1,now.y))
-        {
-            node nxt=now;
-            nxt.x++;
-            nxt.depth++;
-            q.push(nxt);
-        }
-        if (check(now.x,now.y-1))
-        {
-            node nxt=now;
-            nxt.y--;
-            nxt.depth++;
-            q.push(nxt);
-        }
-        if (check(now.x,now.y+1))
-        {
-            node nxt=now;
-            nxt.y++;
-            nxt.depth++;
-            q.push(nxt);
-        }
-    }
-    return depthest;
-}
-int main()
-{
-    freopen("data\\a.in","r",stdin);
-    freopen("data\\a2.out","w",stdout);
-    int t;
-    scanf("%d",&t);
-    while (t--)
-    {
-        init();
-        ans=inf;
-        scanf("%d%d",&n,&m);
-        for (int i=0;i<n;++i)
-        scanf("%s",grid[i]);
-        for (int i=0;i<n;++i){
-            for (int j=0;j<m;++j){
-                if (grid[i][j]=='#'){
-                    node g;
-                    g.x=i;
-                    g.y=j;
-                    g.depth=0;
-                    grass.push_back(g);
-                }
-            }
-        }
-        for (int i=0;i<grass.size();++i)
-        {
-            for (int j=i;j<grass.size();++j)
-            {
-                grass[i].depth=0;
-                grass[j].depth=0;
-                int temp=min(bfs(grass[i],grass[j]),ans);
-                if (judge())
-                ans=min(ans,temp);
-            }
-        }
-        printf("Case %d: ",++casee);
-        if (ans==inf)
-        printf("-1\n");
-        else
-        printf("%d\n",ans);
-    }
-    return 0;
+ 
+int main(){
+	freopen("data//a.in","r",stdin);
+	ios::sync_with_stdio(false);
+	int T;
+	scanf("%d",&T);
+	while (T--){
+		scanf("%d %d",&n,&m); 
+		for(int i = 0 ; i<n ; i++){
+			scanf("%s",G[i]);
+		}
+		bfsFire();
+		
+		int ans = bfs();
+		if(ans == -1)
+			printf("IMPOSSIBLE\n");
+		else
+			printf("%d\n",ans);
+	}
+		
+	return 0;
 }
