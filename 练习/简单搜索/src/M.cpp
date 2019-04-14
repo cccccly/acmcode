@@ -1,11 +1,11 @@
 #include <stdio.h>
 
-int s,n,m;
+int S,N,M;
 
 int main(){
-    // while(~scanf("%d %d %d",&s,&n,&m) && (s||n||m)){
-    //     printf("111");
-    // }
-   scanf("%d %d %d",&s,&n,&m);
+	freopen("..//data//m.in","r",stdin);
+    while(~scanf("%d %d %d",&S,&N,&M) && (S||N||M)){
+        
+    }
     return 0;
 }
