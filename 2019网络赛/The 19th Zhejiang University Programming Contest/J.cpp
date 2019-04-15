@@ -9,7 +9,7 @@ int main(){
 	scanf("%d",&T);
 	while(T--){
 		scanf("%lld",&n);
-		printf("%lld lld\n",2*n,3*n);
+		printf("%lld %lld\n",8*n,9*n);
 	}
 	return 0;
 }
