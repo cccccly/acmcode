@@ -63,6 +63,7 @@ void bfs1(){
 			next.y = cur.y + dy[i];
 			if(!judge1(next))
 				continue;
+			vis1[next.x][next.y] = 1;
 			next.step = cur.step + 1;
 			if(maze[next.x][next.y] == '@')
 				ans[next.x][next.y].x = next.step;
@@ -81,6 +82,7 @@ void bfs2(){
 			next.y = cur.y + dy[i];
 			if(!judge2(next))
 				continue;
+			vis2[next.x][next.y] = 1;
 			next.step = cur.step + 1;
 			if(maze[next.x][next.y] == '@')
 				ans[next.x][next.y].y = next.step;
@@ -93,21 +95,23 @@ void solve(){
 	int min = 50010;
 	for(int i = 0;i < n;i++){
 		for(int j = 0;j < m;j++){
-			if(maze[i][j] == '@' && ans[i][j].x != -1 && ans[i][j].x == ans[i][j].y && ans[i][j].x < min){
-				min = ans[i][j].x;
+			if(maze[i][j] == '@' && ans[i][j].x != -1 &&ans[i][j].y != -1&& ans[i][j].x+ans[i][j].y < min){
+				min = ans[i][j].x + ans[i][j].y;
 			}
 		}
 	}
-	printf("%d\n",min);
+	printf("%d\n",min*11);
 }
 
 
 int main(){
-	freopen("..//data//n.in","r",stdin);
+	//freopen("..//data//n.in","r",stdin);
 	while(~scanf("%d %d",&n,&m)){
+		init();
 		bfs1();
 		bfs2();
 		solve();
+		//printf("%d %d\n",n,m);
 	}
 	return 0;
 }
