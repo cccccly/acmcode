@@ -1,16 +1,14 @@
 #include <stdio.h>
-#include <map>
+#include <set>
 #include <string.h>
 using namespace std;
 
 #define N 100005
 int pre[N];     //每个结点
 int rk[N];    //树的高度
-int ans[N];
-char s1[N],s2[N];
+//set <int> ans;
 void printPre(int n){
-	
-	for(int i = 0;i < n;i++){
+	for(int i = 1;i <= n;i++){
 		printf("%d ",pre[i]);
 	}
 	puts("");
@@ -19,13 +17,11 @@ void printPre(int n){
 //初始化
 void init(int n)     //对n个结点初始化
 {
-	memset(s1,'\0',sizeof(s1));
-	memset(s2,'\0',sizeof(s2));
-	memset(ans,0,sizeof(ans));
     for(int i = 1; i <= n; i++){
         pre[i] = i;     //每个结点的上级都是自己
         rk[i] = 1;    //每个结点构成的树的高度为1
     }
+//    ans.clear();
 }
  
 //int find_pre(int x)     //查找结点x的根结点
@@ -34,6 +30,9 @@ void init(int n)     //对n个结点初始化
 //        return x;      
 //    }
 //    return find_pre(pre[x]);    //递归查找
+//	while(pre[x] != x)
+//		x = pre[x];
+//	return x;
 //}
  
 //改进查找算法：完成路径压缩，将x的上级直接变为根结点，那么树的高度就会大大降低
@@ -76,26 +75,23 @@ void unite(int x,int y)
 int main(){
 	int n,m;
 	//freopen("B.in","r",stdin);
-	scanf("%d %d",&n,&m);
-	init(n);
-	int p1,p2;
-	for(int i = 1;i <= m;i++){
-		//printPre(n);
-		//printf("%s\n",s1);
-		scanf("%d %s",&p2,s2);
-		if(strcmp(s1,s2) == 0){
-			unite(p2,p1);
+	while(1){
+		scanf("%d",&n);
+		if(n == 0)
+			break;
+		scanf("%d",&m);
+		init(n);
+		int tmp1,tmp2; 
+		for(int i = 1;i <= m;i++){
+			scanf("%d %d",&tmp1,&tmp2);
+			unite(tmp1,tmp2);
 		}
-		else{
-			p1 = p2;
-			strcpy(s1,s2);
+		int ans = 0;
+		for(int i = 1;i <= n;i++){
+			if(pre[i] == i)
+				ans++;
 		}
-	}
-	for(int i = 1;i <= n;i++){
-		ans[find_pre(i)]++;
-	}
-	for(int i = 1;i <= n;i++){
-		printf("%d ",ans[pre[i]] - 1);
+		printf("%d\n",ans - 1);
 	}
 	return 0;
 }
